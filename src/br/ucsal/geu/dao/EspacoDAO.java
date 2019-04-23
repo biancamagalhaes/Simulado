@@ -111,36 +111,32 @@ public class EspacoDAO {
 	
 	public Espaco getByID(int id) {
 		Espaco e = null;
+		System.out.println(id);
 		try {
-			PreparedStatement ps = conexao.getConnection().prepareStatement("select espacos.id,identificacao,andar,bloco_id,nome,letra,latitude,longitude,tipo_id,tipos.nome as nometipo, tipos.descricao from espacos,blocos,tipos where espacos.bloco_id = blocos.id and espacos.tipo_id = tipos.id;");
+			PreparedStatement ps = conexao.getConnection().prepareStatement("select id,identificacao,andar,tipo_id,bloco_id from espacos where id=?");
 			ps.setInt(1, id);
+			System.out.println("entrei");
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
+				System.out.println("entrei");
 				e = new Espaco();
 				e.setId(rs.getInt("id"));
 				e.setIdentificacao(rs.getString("identificacao"));
 				e.setAndar(rs.getString("andar"));
 				Tipo t = new Tipo();
-				Bloco b = new Bloco();
-				while(rs.next()) {
-					t.setId(rs.getInt("tipo_id"));
-					t.setNome(rs.getString("nometipo"));
-					t.setDescricao(rs.getString("descricao"));
-					
-					
-					b.setId(rs.getInt("bloco_id"));
-					b.setNome(rs.getString("nome"));
-					b.setLetra(rs.getString("letra"));
-					b.setLatitude(rs.getString("latitude"));
-					b.setLongitude(rs.getString("longitude"));
-				}
+				t.setId(rs.getInt("tipo_id"));
 				e.setTipo(t);
+					
+				Bloco b = new Bloco();
+				b.setId(rs.getInt("bloco_id"));
 				e.setBloco(b);
+				
 			}
 			
 		} catch (SQLException r) {
 			r.printStackTrace();
 		}
+		
 		return e;
 	}
 	

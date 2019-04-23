@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +29,14 @@ public class ReservaDAO {
 	public List<Reserva> listar() {
 		Statement stmt;
 		List<Reserva> reservas = new ArrayList<>();
+		
 		try {
+			
 			stmt = conexao.getConnection().createStatement();
-			ResultSet rs = stmt.executeQuery("select id,titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim, espaco_id from reservas");
+			ResultSet rs = stmt.executeQuery("select reservas.id,titulo,descricao,justificativa,solicitante,telefone,data,hora_inicio,hora_fim,espaco_id,identificacao,andar,bloco_id,nome,letra,latitude,longitude,tipo_id,tipos.nome as nometipo, tipos.descricao from reservas,espacos,blocos,tipos where reservas.espaco_id = espacos.id and espacos.bloco_id = blocos.id and espacos.tipo_id = tipos.id;");
+			
 			while(rs.next()) {
+				
 				Reserva r = new Reserva();
 				r.setId(rs.getInt("id"));
 				r.setTitulo(rs.getString("titulo"));
@@ -38,16 +44,19 @@ public class ReservaDAO {
 				r.setJustificativa(rs.getString("justificativa"));
 				r.setSolicitante(rs.getString("solicitante"));
 				r.setTelefone(rs.getString("telefone"));
-				r.setData(rs.getDate("data"));
+				r.setData(data);
 				r.setHora_inicio(rs.getTime("hora_inicio"));
 				r.setHora_fim(rs.getTime("hora_fim"));
 				
 				Espaco e = new Espaco();
 				e.setId(rs.getInt("espaco_id"));
+				e.setIdentificacao(rs.getString("identificacao"));
 				r.setEspaco(e);
 				reservas.add(r);
 			}
+			
 			stmt.close();
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -60,6 +69,7 @@ public class ReservaDAO {
 			
 			PreparedStatement ps = conexao.getConnection()
 					.prepareStatement("insert into reservas (titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim, espaco_id) values (?,?,?,?,?,?,?,?,?);");
+			
 			ps.setString(1, reserva.getTitulo());
 			ps.setString(2, reserva.getDescricao());
 			ps.setString(3, reserva.getJustificativa());
@@ -71,6 +81,7 @@ public class ReservaDAO {
 			ps.setInt(9, reserva.getEspaco().getId());
 			ps.execute();
 			ps.close();
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -81,8 +92,4 @@ public class ReservaDAO {
 		conexao.closeConnection();
 	}
 	
-	
-	
-
-
 }

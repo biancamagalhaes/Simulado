@@ -51,38 +51,39 @@ public class ReservaController extends HttpServlet {
 		String solicitante = request.getParameter("solicitante");
 		String telefone = request.getParameter("telefone");
 		String espacoID = request.getParameter("espaco");
-		System.out.println(espacoID + "me mostra");
+	
 		EspacoDAO espacoDAO = new EspacoDAO();
 		int id = Integer.parseInt(espacoID);
 		Espaco espaco = espacoDAO.getByID(id);
-		System.out.println("ajuda senhor");
-		String v = String.valueOf(espaco.getId());
-		System.out.println(v);
 		
-		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		//DATE AND TIME
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date date;
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("HH:mm");
+		
 		try {
 			date = simpleDateFormat.parse(request.getParameter("data"));
 			java.sql.Date data = new java.sql.Date(date.getTime()); 
-			SimpleDateFormat formatador = new SimpleDateFormat("HH:mm");
+		
 			java.util.Date inicio = formatador.parse(request.getParameter("horaIni"));
 			java.util.Date fim = formatador.parse(request.getParameter("horaFim"));
 			Time horaIni = new Time(inicio.getTime());
 			Time horaFim = new Time(fim.getTime());
+			
+			
 			Reserva reserva = new Reserva(titulo, descricao, justificativa, solicitante, telefone, data, horaIni, horaFim, espaco);
 			ReservaDAO dao = new ReservaDAO();
 			dao.inserir(reserva);
+			
+			
 			request.setAttribute("lista", dao.listar());
 			request.getRequestDispatcher("reservalist.jsp").forward(request, response);
+			
+			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	
-		
-
-
 	}
 }

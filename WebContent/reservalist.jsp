@@ -47,8 +47,11 @@
  <td> ${e.hora_inicio} </td>
  <td> ${e.hora_fim} </td>
  <td> ${e.espaco.identificacao} </td>
- 
 <tr>
+
+<h1> ${e.hora_fim}</h1>
+<h1> ${e.espaco.id}</h1>
+
 </c:forEach>
 </table>
 </div>
