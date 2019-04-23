@@ -109,5 +109,44 @@ public class EspacoDAO {
 	}
 	
 	
+	public Espaco getByID(int id) {
+		Espaco e = null;
+		try {
+			PreparedStatement ps = conexao.getConnection().prepareStatement("select espacos.id,identificacao,andar,bloco_id,nome,letra,latitude,longitude,tipo_id,tipos.nome as nometipo, tipos.descricao from espacos,blocos,tipos where espacos.bloco_id = blocos.id and espacos.tipo_id = tipos.id;");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				e = new Espaco();
+				e.setId(rs.getInt("id"));
+				e.setIdentificacao(rs.getString("identificacao"));
+				e.setAndar(rs.getString("andar"));
+				Tipo t = new Tipo();
+				Bloco b = new Bloco();
+				while(rs.next()) {
+					t.setId(rs.getInt("tipo_id"));
+					t.setNome(rs.getString("nometipo"));
+					t.setDescricao(rs.getString("descricao"));
+					
+					
+					b.setId(rs.getInt("bloco_id"));
+					b.setNome(rs.getString("nome"));
+					b.setLetra(rs.getString("letra"));
+					b.setLatitude(rs.getString("latitude"));
+					b.setLongitude(rs.getString("longitude"));
+				}
+				e.setTipo(t);
+				e.setBloco(b);
+			}
+			
+		} catch (SQLException r) {
+			r.printStackTrace();
+		}
+		return e;
+	}
+	
+
+	public void close() {
+		conexao.closeConnection();
+	}
 
 }

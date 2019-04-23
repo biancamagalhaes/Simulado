@@ -14,11 +14,11 @@ public class Reserva {
 	private Date data;
 	private Time hora_inicio;
 	private Time hora_fim;
-	//private Espaco espaco;
+	private Espaco espaco;
 	
 	
 	public Reserva(String titulo, String descricao, String justificativa, String solicitante,
-			String telefone, Date data, Time hora_inicio, Time hora_fim) {
+			String telefone, Date data, Time hora_inicio, Time hora_fim, Espaco espaco) {
 		super();
 		this.titulo = titulo;
 		this.descricao = descricao;
@@ -28,7 +28,7 @@ public class Reserva {
 		this.data = data;
 		this.hora_inicio = hora_inicio;
 		this.hora_fim = hora_fim;
-		//this.espaco = espaco;
+		this.espaco = espaco;
 	}
 	
 
@@ -109,13 +109,13 @@ public class Reserva {
 		this.id = id;
 	}
 
-	//public Espaco getEspaco() {
-	//	return espaco;
-	//}
+	public Espaco getEspaco() {
+		return espaco;
+	}
 
-	//public void setEspaco(Espaco espaco) {
-	//	this.espaco = espaco;
-	//}
+	public void setEspaco(Espaco espaco) {
+		this.espaco = espaco;
+	}
 
 	
 }

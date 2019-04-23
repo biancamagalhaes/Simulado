@@ -32,6 +32,7 @@
 <th> Data </th>
 <th> Hr inicio </th>
 <th> Hr fim </th>
+<th> Espaço </th>
  
 </tr>
 
@@ -45,6 +46,7 @@
  <td> ${e.data} </td>
  <td> ${e.hora_inicio} </td>
  <td> ${e.hora_fim} </td>
+ <td> ${e.espaco.identificacao} </td>
  
 <tr>
 </c:forEach>

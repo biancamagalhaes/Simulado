@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.ucsal.geu.model.Bloco;
+import br.ucsal.geu.model.Espaco;
 import br.ucsal.geu.model.Reserva;
 import br.ucsal.util.Conexao;
 
@@ -17,6 +19,9 @@ public class ReservaDAO {
 	
 	public ReservaDAO() {
 		this.conexao = Conexao.getConexao();
+		System.out.println(conexao.toString());
+		List<Reserva> listinha = listar();
+		System.out.println(listinha.toString());
 	}
 
 	public List<Reserva> listar() {
@@ -24,7 +29,7 @@ public class ReservaDAO {
 		List<Reserva> reservas = new ArrayList<>();
 		try {
 			stmt = conexao.getConnection().createStatement();
-			ResultSet rs = stmt.executeQuery("select id,titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim from reservas;");
+			ResultSet rs = stmt.executeQuery("select id,titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim, espaco_id from reservas");
 			while(rs.next()) {
 				Reserva r = new Reserva();
 				r.setId(rs.getInt("id"));
@@ -36,6 +41,10 @@ public class ReservaDAO {
 				r.setData(rs.getDate("data"));
 				r.setHora_inicio(rs.getTime("hora_inicio"));
 				r.setHora_fim(rs.getTime("hora_fim"));
+				
+				Espaco e = new Espaco();
+				e.setId(rs.getInt("espaco_id"));
+				r.setEspaco(e);
 				reservas.add(r);
 			}
 			stmt.close();
@@ -50,7 +59,7 @@ public class ReservaDAO {
 		try {
 			
 			PreparedStatement ps = conexao.getConnection()
-					.prepareStatement("insert into blocos (titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim) values (?,?,?,?,?,?,?,?,?);");
+					.prepareStatement("insert into reservas (titulo,descricao,justificativa,solicitante, telefone, data, hora_inicio, hora_fim, espaco_id) values (?,?,?,?,?,?,?,?,?);");
 			ps.setString(1, reserva.getTitulo());
 			ps.setString(2, reserva.getDescricao());
 			ps.setString(3, reserva.getJustificativa());
@@ -59,6 +68,7 @@ public class ReservaDAO {
 			ps.setDate(6, reserva.getData());
 			ps.setTime(7, reserva.getHora_inicio());
 			ps.setTime(8, reserva.getHora_fim());
+			ps.setInt(9, reserva.getEspaco().getId());
 			ps.execute();
 			ps.close();
 		} catch (SQLException e) {

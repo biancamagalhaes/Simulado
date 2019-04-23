@@ -1,7 +1,6 @@
 package br.ucsal.geu.controller;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,10 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import br.ucsal.geu.dao.BlocoDAO;
+
 import br.ucsal.geu.dao.EspacoDAO;
 import br.ucsal.geu.dao.ReservaDAO;
-import br.ucsal.geu.model.Bloco;
 import br.ucsal.geu.model.Espaco;
 import br.ucsal.geu.model.Reserva;
 
@@ -52,7 +50,17 @@ public class ReservaController extends HttpServlet {
 		String justificativa = request.getParameter("justificativa");
 		String solicitante = request.getParameter("solicitante");
 		String telefone = request.getParameter("telefone");
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String espacoID = request.getParameter("espaco");
+		System.out.println(espacoID + "me mostra");
+		EspacoDAO espacoDAO = new EspacoDAO();
+		int id = Integer.parseInt(espacoID);
+		Espaco espaco = espacoDAO.getByID(id);
+		System.out.println("ajuda senhor");
+		String v = String.valueOf(espaco.getId());
+		System.out.println(v);
+		
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 		java.util.Date date;
 		try {
 			date = simpleDateFormat.parse(request.getParameter("data"));
@@ -62,10 +70,9 @@ public class ReservaController extends HttpServlet {
 			java.util.Date fim = formatador.parse(request.getParameter("horaFim"));
 			Time horaIni = new Time(inicio.getTime());
 			Time horaFim = new Time(fim.getTime());
-			Reserva reserva = new Reserva(titulo, descricao, justificativa, solicitante, telefone, data, horaIni, horaFim);
+			Reserva reserva = new Reserva(titulo, descricao, justificativa, solicitante, telefone, data, horaIni, horaFim, espaco);
 			ReservaDAO dao = new ReservaDAO();
 			dao.inserir(reserva);
-
 			request.setAttribute("lista", dao.listar());
 			request.getRequestDispatcher("reservalist.jsp").forward(request, response);
 		} catch (ParseException e) {
