@@ -4,12 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.ucsal.geu.model.Bloco;
 import br.ucsal.geu.model.Espaco;
 import br.ucsal.geu.model.Reserva;
 import br.ucsal.util.Conexao;
@@ -44,7 +41,7 @@ public class ReservaDAO {
 				r.setJustificativa(rs.getString("justificativa"));
 				r.setSolicitante(rs.getString("solicitante"));
 				r.setTelefone(rs.getString("telefone"));
-				r.setData(data);
+				r.setData(rs.getDate("data"));
 				r.setHora_inicio(rs.getTime("hora_inicio"));
 				r.setHora_fim(rs.getTime("hora_fim"));
 				
